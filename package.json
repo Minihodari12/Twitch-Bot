@@ -1,0 +1,9 @@
+{
+  "name": "twitch-bot",
+  "version": "1.0.0",
+  "main": "bot.js",
+  "license": "MIT",
+  "dependencies": {
+    "tmi.js": "^1.8.5"
+  }
+}
