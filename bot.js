@@ -1,25 +1,29 @@
-const tmi = require('tmi.js');
+import { ChatClient } from 'twitch-js';
 
-const client = new tmi.Client({
-    options: { debug: true },
-    identity: {
-        username: process.env.BOT_USERNAME,
-        password: process.env.OAUTH_TOKEN
-    },
-    channels: process.env.CHANNELS.split(',')
+// Luo chat-clientti
+const client = new ChatClient({
+  username: process.env.BOT_USERNAME,
+  password: process.env.OAUTH_TOKEN,
+  channels: process.env.CHANNELS.split(','),
 });
 
-client.connect();
+// Chat-viestien kuuntelu
+client.on('PRIVMSG', (msg) => {
+  const message = msg.message.trim();
+  const user = msg.username;
+  const channel = msg.channel;
 
-client.on('message', (channel, tags, message, self) => {
-    if (self) return;
+  // !hei
+  if (message === '!hei') {
+    client.say(channel, `Hei @${user}! 👋`);
+  }
 
-    if (message === '!hei') {
-        client.say(channel, `Hei @${tags.username}!`);
-    }
-
-    if (message.startsWith('!echo ')) {
-        const text = message.slice(6);
-        client.say(channel, text);
-    }
+  // !echo <teksti>
+  if (message.startsWith('!echo ')) {
+    const text = message.slice(6);
+    client.say(channel, text);
+  }
 });
+
+// Käynnistä botti
+client.connect().catch(console.error);
